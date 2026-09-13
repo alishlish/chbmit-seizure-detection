@@ -216,3 +216,19 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# EEG project data
+*.edf
+*.npz
+
+# Trained model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Large local data/cache directories
+data/
+cache/
+
+# macOS
+.DS_Store
