@@ -2,14 +2,14 @@
 
 **Python · PyTorch · MNE · SciPy · scikit-learn · NumPy · Pandas · Matplotlib**
 
-I wanted to answer a pretty simple question: **if a seizure classification model performs well on EEG from patients it has already seen, does it still work on a completely new patient?**
+My motivation for this project lies with people I know that deal with seizures. Thus, I wanted to try my hand at seizure classification, not to produce any clinical findings (this would take a lot more expertise in the field and rigorous research), but to see if I can produce anything interesting. My main north star is: **if a seizure classification model performs well on EEG from patients it has already seen, does it still work on a completely new patient?**
 
 This project compares two representations of scalp EEG for patient-independent seizure classification:
 
 - **Raw multichannel EEG**, learned directly with a 1D CNN
 - **Spectral bandpower features**, modeled with an MLP
 
-Using the[CHB-MIT Scalp EEG Database](https://physionet.org/content/chbmit/1.0.0/), I built the preprocessing, feature extraction, model training, patient-disjoint validation, and evaluation pipeline from end to end.
+Using the [CHB-MIT Scalp EEG Database](https://physionet.org/content/chbmit/1.0.0/), I built the preprocessing, feature extraction, model training, patient-disjoint validation, and evaluation pipeline from end to end.
 
 The main focus is **generalization across patients**. Rather than randomly splitting EEG windows, patients are kept separate between training and evaluation so the models are tested on people they have not seen during training.
 
