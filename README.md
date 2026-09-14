@@ -13,6 +13,25 @@ Using the [CHB-MIT Scalp EEG Database](https://physionet.org/content/chbmit/1.0.
 
 The main focus is **generalization across patients**. Rather than randomly splitting EEG windows, patients are kept separate between training and evaluation so the models are tested on people they have not seen during training.
 
+## Table of Contents
+
+- [Key Results](#key-results)
+- [What I Built](#what-i-built)
+- [Model Overview](#model-overview)
+  - [Raw EEG](#raw-eeg)
+  - [Spectral Bandpower](#spectral-bandpower)
+- [Experiment 1 — 18-Patient LOSO Baseline](#experiment-1--18-patient-loso-baseline)
+- [Experiment 2 — Patient-Disjoint Model Selection](#experiment-2--patient-disjoint-model-selection)
+- [Additional Held-Out Patient Evaluation](#additional-held-out-patient-evaluation)
+- [Why Patient-Independent Evaluation Matters](#why-patient-independent-evaluation-matters)
+- [Memory-Efficient Training](#memory-efficient-training)
+- [Running the Notebooks](#running-the-notebooks)
+- [Repository Structure](#repository-structure)
+- [Tech Stack](#tech-stack)
+- [Limitations](#limitations)
+- [Future Work](#future-work)
+- [Takeaway](#takeaway)
+
 
 ## Key Results
 
@@ -32,22 +51,12 @@ Overall, the results are consistent with the raw waveform preserving useful temp
 
 ## What I Built
 
-This project includes the full experimental pipeline rather than just the model definitions.
-
-- Processed multichannel EEG from CHB-MIT EDF recordings
-- Applied **0.5–50 Hz filtering** and a fixed 18-channel montage
-- Extracted seizure-aware **4-second windows**
-- Removed ambiguous windows close to seizure boundaries
-- Built both raw waveform and spectral bandpower representations
-- Implemented a **1D CNN** for raw EEG
-- Implemented an **MLP** for 90-dimensional PSD features
-- Kept training, validation, and evaluation patients disjoint
-- Fit normalization statistics using training patients only
-- Used class-weighted binary cross-entropy for severe class imbalance
-- Built a memory-efficient two-pass pipeline for large raw EEG arrays
-- Selected training duration using **patient-level AUPRC**
-- Evaluated AUROC and AUPRC separately for each held-out patient
-- Performed paired patient-level statistical testing for the LOSO experiment
+- Built an end-to-end EEG preprocessing pipeline for CHB-MIT recordings, including filtering, channel selection, seizure-aware labeling, and 4-second window extraction.
+- Implemented a **1D CNN** for raw 18-channel EEG and an **MLP** for 90-dimensional spectral bandpower features.
+- Designed **patient-disjoint training and validation** so held-out patients do not contribute to model fitting or normalization statistics.
+- Handled severe class imbalance using natural-prevalence data and training-only positive-class weighting.
+- Constructed a **memory-efficient two-pass training pipeline** to process more than 52,000 raw EEG windows without unnecessary large intermediate copies.
+- Evaluated models with **patient-level AUROC/AUPRC**, patient-level epoch selection, and paired statistical testing across LOSO patients.
 
 
 ## Model Overview
@@ -84,7 +93,6 @@ Dropout
 ```
 
 This allows the network to learn temporal signal patterns directly from the EEG waveform.
-
 
 ### Spectral Bandpower
 
@@ -251,7 +259,9 @@ Instead of repeatedly concatenating large patient arrays, I use a **two-pass con
 
 This avoids unnecessary multi-gigabyte temporary copies while still allowing the models to train on all eligible windows at their natural prevalence.
 
+## Running the Notebooks
 
+These notebooks were developed in **Google Colab** and use **Google Drive** for dataset, cache, and result storage. If you run them in your own environment, update the Drive paths to match your local or cloud storage setup.
 ## Repository Structure
 
 ```text
